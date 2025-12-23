@@ -2,153 +2,230 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Park - Login/Signup</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: Arial, sans-serif;
-}
+  * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Arial, sans-serif; }
 
-body{
-  height:100vh;
-  /* SKY BLUE GRADIENT BACKGROUND */
-  background: linear-gradient(135deg, #6dd5fa, #2980b9);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+  body {
+    height: 100vh;
+    background: linear-gradient(135deg, #6dd5fa, #2980b9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-.login-box{
-  background:#fff;
-  width:360px;
-  padding:40px;
-  border-radius:12px;
-  text-align:center;
-  box-shadow:0 15px 40px rgba(0,0,0,.25);
-}
+  .login-box {
+    background: #fff;
+    width: 380px;
+    padding: 30px 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,.3);
+  }
 
-.login-box h2{
-  margin-bottom:30px;
-}
+  h2 { margin-bottom: 25px; color: #333; font-weight: 700; }
 
-.input-box{
-  position:relative;
-  margin-bottom:25px;
-}
+  /* --- INPUT BOX MODERN STYLE --- */
+  .input-box {
+    position: relative;
+    margin-bottom: 25px;
+    text-align: left;
+  }
 
-.input-box input{
-  width:100%;
-  padding:10px;
-  border:none;
-  border-bottom:2px solid #ccc;
-  outline:none;
-}
+  .input-box input {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1.5px solid #ddd;
+    border-radius: 10px;
+    outline: none;
+    background: #fff;
+    font-size: 15px;
+    color: #333;
+    transition: 0.3s;
+  }
 
-.input-box label{
-  position:absolute;
-  left:0;
-  top:10px;
-  font-size:14px;
-  color:#aaa;
-  pointer-events:none;
-  transition:.3s;
-}
+  .input-box label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #aaa;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    background: #fff;
+    padding: 0 6px;
+  }
 
-.input-box input:focus ~ label,
-.input-box input:valid ~ label{
-  top:-10px;
-  font-size:12px;
-  color:#2980b9;
-}
+  /* Floating Label Logic */
+  .input-box input:focus ~ label,
+  .input-box input:valid ~ label,
+  .input-box input:not(:placeholder-shown) ~ label {
+    top: 0;
+    font-size: 12px;
+    color: #2980b9;
+    font-weight: bold;
+  }
 
-.forgot{
-  display:block;
-  text-align:right;
-  font-size:12px;
-  color:#666;
-  margin-bottom:20px;
-  text-decoration:none;
-}
+  .input-box input:focus {
+    border-color: #2980b9;
+    box-shadow: 0 0 8px rgba(41, 128, 185, 0.2);
+  }
 
-button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:25px;
-  background:linear-gradient(to right,#6dd5fa,#2980b9);
-  color:#fff;
-  font-size:16px;
-  cursor:pointer;
-}
+  /* --- MODERN ROLE SELECTION --- */
+  .role-select { margin-bottom: 25px; display: none; animation: fadeIn 0.4s; }
+  
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.or{
-  margin:25px 0 10px;
-  font-size:13px;
-  color:#999;
-}
+  .role-title { font-size: 13px; color: #666; font-weight: 600; margin-bottom: 12px; text-align: left; display: block; }
 
-.social span{
-  display:inline-block;
-  width:35px;
-  height:35px;
-  line-height:35px;
-  border-radius:50%;
-  background:#eee;
-  margin:0 5px;
-  font-weight:bold;
-}
+  .role-options {
+    display: flex;
+    gap: 12px;
+  }
 
-.signup{
-  margin-top:20px;
-  font-size:13px;
-  color:#999;
-}
+  .role-card {
+    flex: 1;
+    padding: 15px 10px;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    background: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .role-card:hover { border-color: #6dd5fa; background: #f9f9f9; }
+
+  .role-card.active {
+    border-color: #2980b9;
+    background: #eef7ff;
+    transform: scale(1.02);
+  }
+
+  .role-icon { font-size: 24px; margin-bottom: 8px; transition: 0.3s; }
+  .role-text { font-size: 13px; font-weight: 600; color: #777; transition: 0.3s; }
+  
+  .role-card.active .role-text { color: #2980b9; }
+  .role-card.active .role-icon { transform: scale(1.1); }
+
+  /* --- BUTTONS & FOOTER --- */
+  button {
+    width: 100%; padding: 14px; border: none; border-radius: 30px;
+    background: linear-gradient(to right, #6dd5fa, #2980b9);
+    color: #fff; font-size: 16px; font-weight: bold; cursor: pointer;
+    box-shadow: 0 5px 15px rgba(41, 128, 185, 0.3);
+    transition: 0.3s;
+  }
+
+  button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(41, 128, 185, 0.4); }
+
+  .toggle-text { margin-top: 25px; font-size: 14px; color: #777; }
+  .toggle-text b { color: #2980b9; cursor: pointer; }
+
+  .social { margin-top: 20px; }
+  .social span {
+    display: inline-block; width: 40px; height: 40px; line-height: 40px;
+    border-radius: 50%; background: #f4f4f4; margin: 0 8px; font-weight: bold; 
+    cursor: pointer; transition: 0.3s; color: #555;
+  }
+  .social span:hover { background: #2980b9; color: #fff; }
+
 </style>
 </head>
 <body>
 
 <div class="login-box">
-  <h2>Login</h2>
+  <h2 id="form-title">Login</h2>
 
   <div class="input-box">
-    <input type="email" id="email" required>
-    <label>Username</label>
+    <input type="email" id="email" required placeholder=" ">
+    <label>Email / Username</label>
   </div>
 
   <div class="input-box">
-    <input type="password" id="password" required>
-    <label>Password</label>
+    <input type="password" id="password" required placeholder=" ">
+    <label>Password Any</label>
   </div>
 
-  <a href="#" class="forgot">Forgot password?</a>
+  <div id="role-section" class="role-select">
+    <span class="role-title">Select Account Type</span>
+    <div class="role-options">
+      <div class="role-card active" id="user-card" onclick="setRole('user')">
+        <span class="role-icon">🚗</span>
+        <span class="role-text">Vehicle User</span>
+      </div>
+      <div class="role-card" id="owner-card" onclick="setRole('owner')">
+        <span class="role-icon">🅿️</span>
+        <span class="role-text">Parking Owner</span>
+      </div>
+    </div>
+    <input type="hidden" id="role" value="user">
+  </div>
 
-  <button onclick="login()">LOGIN</button>
+  <button id="main-btn" onclick="handleAction()">LOGIN</button>
 
-  <p class="or">Or Sign Up Using</p>
+  <p class="toggle-text" id="toggle-msg">
+    Don't have an account? <b onclick="toggleForm('signup')">SIGN UP</b>
+  </p>
 
   <div class="social">
-    <span>f</span>
-    <span>t</span>
-    <span>G</span>
+    <span>f</span><span>t</span><span>G</span>
   </div>
-
-  <p class="signup">Or Sign Up Using <br><b>SIGN UP</b></p>
 </div>
 
 <script>
-function login(){
-  let email = document.getElementById("email").value;
-  let pass = document.getElementById("password").value;
+  let isLoginMode = true;
 
-  if(email === "" || pass === ""){
-    alert("Please enter email & password");
-  }else{
-    window.location.href = "dashboard.html";
+  function toggleForm(mode) {
+    const title = document.getElementById("form-title");
+    const btn = document.getElementById("main-btn");
+    const roleSection = document.getElementById("role-section");
+    const toggleMsg = document.getElementById("toggle-msg");
+
+    if (mode === 'signup') {
+      isLoginMode = false;
+      title.innerText = "Create Account";
+      btn.innerText = "SIGN UP";
+      roleSection.style.display = "block";
+      toggleMsg.innerHTML = 'Already have an account? <b onclick="toggleForm(\'login\')">LOGIN</b>';
+    } else {
+      isLoginMode = true;
+      title.innerText = "Login";
+      btn.innerText = "LOGIN";
+      roleSection.style.display = "none";
+      toggleMsg.innerHTML = 'Don\'t have an account? <b onclick="toggleForm(\'signup\')">SIGN UP</b>';
+    }
   }
-}
+
+  function setRole(roleValue) {
+    document.getElementById('role').value = roleValue;
+    document.getElementById('user-card').classList.toggle('active', roleValue === 'user');
+    document.getElementById('owner-card').classList.toggle('active', roleValue === 'owner');
+  }
+
+  function handleAction() {
+    let email = document.getElementById("email").value;
+    let pass = document.getElementById("password").value;
+
+    if (email === "" || pass === "") {
+      alert("Please fill all fields");
+      return;
+    }
+
+    if (isLoginMode) {
+      alert("Logging in...");
+      window.location.href = "dashboard.html";
+    } else {
+      let role = document.getElementById("role").value;
+      alert("Registered successfully as " + role.toUpperCase());
+      toggleForm('login');
+    }
+  }
 </script>
 
 </body>
