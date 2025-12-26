@@ -177,11 +177,32 @@
     <span>f</span><span>t</span><span>G</span>
   </div>
 </div>
+<script type="module">
+  // 1. Firebase ke functions ko import karein
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-<script>
+  // 2. Aapka Firebase Config (Wahi jo dashboard mein tha)
+  const firebaseConfig = {
+    apiKey: "AIzaSyCRK6QnA0F_MNkSdNiVnNgypt2TzlaVomQ",
+    authDomain: "smart-parking-3d52f.firebaseapp.com",
+    projectId: "smart-parking-3d52f",
+    storageBucket: "smart-parking-3d52f.firebasestorage.app",
+    messagingSenderId: "139926831182",
+    appId: "1:139926831182:web:14ce31ebdaa2b5acac431f"
+  };
+
+  // 3. Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
   let isLoginMode = true;
 
-  function toggleForm(mode) {
+  // --- ZAROORI: type="module" mein functions ko window object se jodna padta hai ---
+  
+  window.toggleForm = (mode) => {
     const title = document.getElementById("form-title");
     const btn = document.getElementById("main-btn");
     const roleSection = document.getElementById("role-section");
@@ -200,33 +221,62 @@
       roleSection.style.display = "none";
       toggleMsg.innerHTML = 'Don\'t have an account? <b onclick="toggleForm(\'signup\')">SIGN UP</b>';
     }
-  }
+  };
 
-  function setRole(roleValue) {
+  window.setRole = (roleValue) => {
     document.getElementById('role').value = roleValue;
     document.getElementById('user-card').classList.toggle('active', roleValue === 'user');
     document.getElementById('owner-card').classList.toggle('active', roleValue === 'owner');
-  }
+  };
 
-  function handleAction() {
+  // --- MAIN BACKEND ACTION ---
+  window.handleAction = async () => {
     let email = document.getElementById("email").value;
     let pass = document.getElementById("password").value;
+    let role = document.getElementById("role").value; // Signup ke time role lega
+    let btn = document.getElementById("main-btn");
 
     if (email === "" || pass === "") {
       alert("Please fill all fields");
       return;
     }
 
-    if (isLoginMode) {
-      alert("Logging in...");
-      window.location.href = "dashboard.html";
-    } else {
-      let role = document.getElementById("role").value;
-      alert("Registered successfully as " + role.toUpperCase());
-      toggleForm('login');
+    btn.disabled = true;
+    btn.innerText = "Processing...";
+
+    try {
+      if (isLoginMode) {
+        // --- LOGIN LOGIC ---
+        await signInWithEmailAndPassword(auth, email, pass);
+        alert("Login Successful!");
+        window.location.href = "dashboard.html";
+      } else {
+        // --- SIGNUP LOGIC ---
+        // A. Account banayein
+        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        const user = userCredential.user;
+
+        // B. Database mein "users" folder bana kar role save karein
+        await setDoc(doc(db, "users", user.uid), {
+          email: email,
+          role: role,
+          uid: user.uid,
+          createdAt: new Date()
+        });
+
+        alert("Registered successfully as " + role.toUpperCase());
+        window.location.href = "dashboard.html";
+      }
+    } catch (error) {
+      alert("Error: " + error.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerText = isLoginMode ? "LOGIN" : "SIGN UP";
     }
-  }
+  };
 </script>
+
+
 
 </body>
 </html>
