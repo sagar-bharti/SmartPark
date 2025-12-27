@@ -205,40 +205,59 @@
 
   // --- B. Firebase se Data Fetch Karna ---
   onAuthStateChanged(auth, async (user) => {
+    const nameTag = document.getElementById('user-name');
+    const roleTag = document.getElementById('user-role');
+    const ownerNav = document.getElementById('owner-links-nav');
+
     if (user) {
-      document.getElementById('user-name').innerText = user.displayName || "User";
-      try {
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
+        // STEP 1: Sabse pehle user ka login Gmail hi dikhayein
+        nameTag.innerText = user.email; 
 
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          document.getElementById('user-name').innerText = userData.name || "Unknown User";
-          const role = userData.role || "User";
-          document.getElementById('user-role').innerText = role.toUpperCase();
+        try {
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
 
-          if (role === "owner") {
-            document.getElementById('owner-links-nav').style.display = "block";
-          }
+            if (userSnap.exists()) {
+                const userData = userSnap.data();
+                
+                // STEP 2: Agar user ne dashboard mein apna naam save kiya hai, 
+                // toh Gmail ki jagah naam dikhayein. Warna Gmail hi rehne dein.
+                if (userData.name && userData.name.trim() !== "") {
+                    nameTag.innerText = userData.name;
+                }
+
+                // Role update
+                const role = userData.role || "User";
+                if(roleTag) roleTag.innerText = role.toUpperCase();
+                
+                // Owner links check
+                if (role === "owner" && ownerNav) {
+                    ownerNav.style.display = "block";
+                }
+            }
+        } catch (error) {
+            console.error("Firebase Error:", error);
+            // Error hone par bhi Gmail dikhta rahega
+            nameTag.innerText = user.email;
         }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
     } else {
-      // Login page par redirect karna hai toh:
-      // window.location.href = "login.html";
+        // User login nahi hai toh Loading ki jagah 'Guest' ya Login link dikhayein
+        nameTag.innerText = "Guest";
     }
-  });
+});
 
   // --- C. Logout Function (WINDOW ke saath jodein) ---
-  window.logout = () => {
+ window.logout = () => {
     signOut(auth).then(() => {
-      window.location.href = "index.html";
+        alert("Logged out successfully!");
+        // window.location.replace use karne se user 'Back' button daba kar 
+        // wapas dashboard par nahi aa payega
+        window.location.replace("index.html"); 
     }).catch((error) => {
-      alert("Error: " + error.message);
+        console.error("Logout Error:", error);
+        alert("Error logging out: " + error.message);
     });
-  };
-
+};
   // --- D. Bahar click karne par menu band hona ---
   window.onclick = (event) => {
     if (!event.target.closest('.profile-dropdown')) {
@@ -246,6 +265,7 @@
       if (menu) menu.style.display = 'none';
     }
   };
+  
 </script>
 </body>
 </html>
