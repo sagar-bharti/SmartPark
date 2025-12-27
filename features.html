@@ -3,88 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <title>Features | Smart Park</title>
-
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family: "Segoe UI", sans-serif;
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
+    body { background: #f4f6fb; overflow-x: hidden; }
+
+    header { background: #0b5ed7; padding: 15px 30px; position: sticky; top: 0; z-index: 100; }
+    header a { color: white; text-decoration: none; margin-right: 20px; font-weight: 600; }
+
+    /* ===== MAIN LAYOUT ===== */
+    .main-container {
+      display: flex; 
+      height: calc(100vh - 54px); 
     }
 
-    body{
-      background: #f4f6fb;
+    /* LEFT SIDE: Grid of cards */
+    .features-list {
+      flex: 1; 
+      padding: 40px;
+      overflow-y: auto; 
     }
 
-    header{
-      background:#0b5ed7;
-      padding:15px 30px;
+    /* RIGHT SIDE: Details Panel */
+    .details-panel {
+      flex: 0.8;
+      background: white;
+      padding: 40px;
+      border-left: 2px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      position: sticky;
+      top: 54px;
+      overflow-y: auto;
     }
 
-    header a{
-      color:white;
-      text-decoration:none;
-      margin-right:20px;
-      font-weight:600;
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
     }
 
-    /* ===== FEATURES SECTION ===== */
-    .features{
-      padding:60px 8%;
-      text-align:center;
+    .feature-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      transition: 0.3s;
+      cursor: pointer;
+      border: 2px solid transparent;
     }
 
-    .features h1{
-      font-size:36px;
-      margin-bottom:10px;
-      color:#222;
+    .feature-card:hover, .feature-card.active {
+      border-color: #0b5ed7;
+      transform: translateY(-5px);
     }
 
-    .features p{
-      color:#555;
-      margin-bottom:40px;
+    .feature-icon { font-size: 30px; margin-bottom: 10px; }
+    .feature-card h3 { font-size: 16px; color: #333; }
+
+    /* Detail Panel Elements */
+    #detail-icon { font-size: 60px; margin-bottom: 15px; }
+    #detail-title { font-size: 26px; color: #0b5ed7; margin-bottom: 15px; }
+    #detail-desc { font-size: 15px; color: #555; line-height: 1.6; text-align: justify; margin-bottom: 25px; }
+
+    /* FLOW DIAGRAM */
+    .flow-step {
+      background: #eef4ff; color: #0b5ed7; font-weight: bold;
+      padding: 10px 20px; border-radius: 30px; border: 1.5px solid #0b5ed7;
+      width: 90%; margin: 5px 0; font-size: 13px;
     }
+    .arrow { color: #aaa; font-size: 20px; }
 
-    .feature-grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-      gap:25px;
-    }
-
-    .feature-card{
-      background:white;
-      padding:30px;
-      border-radius:16px;
-      box-shadow:0 10px 25px rgba(0,0,0,0.08);
-      transition:0.4s ease;
-      cursor:pointer;
-    }
-
-    
-
-    .feature-icon{
-      font-size:40px;
-      margin-bottom:15px;
-    }
-
-    .feature-card h3{
-      margin-bottom:10px;
-      color:#0b5ed7;
-    }
-
-    .feature-card p{
-      font-size:14px;
-      color:#555;
-    }
-
-    /* ===== INTERACTIVE EFFECT ===== */
-    .feature-card:hover .feature-icon{
-      transform: scale(1.2);
-      transition:0.3s;
+    @media (max-width: 768px) {
+      .main-container { flex-direction: column; height: auto; }
+      .details-panel { position: static; border-left: none; border-top: 2px solid #ddd; }
     }
   </style>
 </head>
-
 <body>
 
 <header>
@@ -94,50 +91,141 @@
   <a href="about.html">About Us</a>
 </header>
 
-<section class="features">
-  <h1>Smart Park Features</h1>
-  <p>AI-powered solutions to make parking faster, smarter and hassle-free</p>
+<div class="main-container">
+  
+  <section class="features-list">
+    <h1 style="margin-bottom: 20px;">Explore Features</h1>
+    <div class="feature-grid">
+      
+      <div class="feature-card active" onclick="updateView('📍')">
+        <div class="feature-icon">📍</div>
+        <h3>Real-Time Slot</h3>
+      </div>
 
-  <div class="feature-grid">
+      <div class="feature-card" onclick="updateView('🧭')">
+        <div class="feature-icon">🧭</div>
+        <h3>Smart Navigation</h3>
+      </div>
 
-    <div class="feature-card">
-      <div class="feature-icon">📍</div>
-      <h3>Real-Time Slot Availability</h3>
-      <p>Instantly view available parking slots using AI-powered sensors.</p>
+      <div class="feature-card" onclick="updateView('💳')">
+        <div class="feature-icon">💳</div>
+        <h3>Cashless Payments</h3>
+      </div>
+
+      <div class="feature-card" onclick="updateView('📅')">
+        <div class="feature-icon">📅</div>
+        <h3>Advance Booking</h3>
+      </div>
+
+      <div class="feature-card" onclick="updateView('📷')">
+        <div class="feature-icon">📷</div>
+        <h3>Security Monitoring</h3>
+      </div>
+
+      <div class="feature-card" onclick="updateView('📊')">
+        <div class="feature-icon">📊</div>
+        <h3>Owner Analytics</h3>
+      </div>
+
     </div>
+  </section>
 
-    <div class="feature-card">
-      <div class="feature-icon">🧭</div>
-      <h3>Smart Navigation</h3>
-      <p>Integrated maps guide drivers directly to the nearest free slot.</p>
+  <aside class="details-panel" id="details-panel">
+    <div id="detail-icon">📍</div>
+    <h2 id="detail-title">Real-Time Availability</h2>
+    <p id="detail-desc">Select a feature to see details.</p>
+    
+    <div id="flow-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
     </div>
+  </aside>
 
-    <div class="feature-card">
-      <div class="feature-icon">💳</div>
-      <h3>Cashless Payments</h3>
-      <p>Secure and fast digital payments through UPI, cards and wallets.</p>
-    </div>
+</div>
 
-    <div class="feature-card">
-      <div class="feature-icon">📅</div>
-      <h3>Advance Booking</h3>
-      <p>Reserve parking slots in advance to save time and reduce stress.</p>
-    </div>
+<script>
+  // Data Object for All Features
+  const featureContent = {
+    '📍': {
+      title: "Real-Time Availability",
+      desc: "Our Real-Time Availability system is directly integrated with our live booking engine. The moment a user confirms a booking, the system instantly marks that specific slot as 'Booked' across the platform. Once the pre-booked duration expires, our automated timer triggers a status update, making the slot 'Available' again for other users. This ensures a seamless and automated rotation of parking spaces.",
+      steps: ["User Confirms Booking", "Slot Status Updated in Firebase", "Live Countdown Timer Starts", "Auto-Reset to Available on Expiry"]
+    },
+    '🧭': {
+      title: "Smart Navigation",
+      desc: "Our Smart Navigation feature bridges the gap between digital booking and physical arrival. Once a user clicks 'Start Navigation', our system intelligently triggers the Google Maps API. It automatically passes the precise latitude and longitude coordinates of the selected parking facility to your phone, providing turn-by-turn voice guidance directly to your spot.",
+      steps: ["Click 'Start Navigation'", "Fetch GPS Coordinates", "Launch Google Maps API", "Follow Voice-Guided Route"]
+    },
+    '💳': {
+      title: "Cashless Payments",
+      desc: "Experience a completely digital checkout process. Our system calculates your parking fee based on duration and allows you to pay via UPI, Credit/Debit cards, or digital wallets. Secure encryption ensures your transactions are safe, and digital receipts are generated instantly for your records.",
+      steps: ["System Calculates Duration", "Generate Secure Payment Link", "Complete Digital Transaction", "Instant Receipt Generation"]
+    },
+    '📅': {
+      title: "Advance Booking",
+      desc: "Planning ahead? The Advance Booking feature allows you to reserve a parking spot hours or days before your visit. By selecting your desired date and time, the system guarantees your spot will be ready upon arrival, saving you from the stress of searching for parking in high-demand areas.",
+      steps: ["Select Date & Time Slot", "Pre-payment & Verification", "Booking ID Generated", "Spot Reserved in Database"]
+    },
+    '📷': {
+      title: "Security Monitoring",
+      desc: "Our parking facility is under constant 24/7 CCTV surveillance to ensure the maximum safety of your vehicle. Every entry and exit point is monitored by high-definition cameras, and professional security staff is alerted to any unusual activity. You can park with peace of mind knowing that your car is in a fully guarded and secure environment.",
+      steps: [
+        "24/7 Continuous CCTV Surveillance",
+        "High-Definition Camera Coverage",
+        "Secure Entry and Exit Monitoring",
+        "Real-Time Guard Alerts for Vehicle Safety"
+      ]
+    },
+    '📊': {
+      title: "Owner Analytics",
+      desc: "Owner Analytics provides parking facility managers with a comprehensive data dashboard. It visualizes key metrics such as daily revenue, peak occupancy hours, and average parking duration using interactive charts. These insights help owners optimize pricing and manage their facility effectively.",
+      steps: ["Collect Daily Booking Data", "Analyze Peak Traffic Hours", "Generate Revenue Reports", "Optimize Operational Strategy"]
+    }
+  };
 
-    <div class="feature-card">
-      <div class="feature-icon">📷</div>
-      <h3>Security & Monitoring</h3>
-      <p>CCTV and AI monitoring ensure safety of vehicles and users.</p>
-    </div>
+  function updateView(icon) {
+    const data = featureContent[icon];
+    if(!data) return;
 
-    <div class="feature-card">
-      <div class="feature-icon">📊</div>
-      <h3>Owner Analytics</h3>
-      <p>Parking owners get insights on revenue, usage, and peak hours.</p>
-    </div>
+    // 1. Basic Content Update
+    document.getElementById('detail-icon').innerText = icon;
+    document.getElementById('detail-title').innerText = data.title;
+    document.getElementById('detail-desc').innerText = data.desc;
 
-  </div>
-</section>
+    // 2. Flow Diagram Update
+    const flowBox = document.getElementById('flow-container');
+    flowBox.innerHTML = "<h4 style='margin: 15px 0; color: #333;'>Process Flow:</h4>";
+    
+    data.steps.forEach((step, index) => {
+      const stepDiv = document.createElement('div');
+      stepDiv.className = 'flow-step';
+      stepDiv.innerText = step;
+      flowBox.appendChild(stepDiv);
+
+      if (index < data.steps.length - 1) {
+        const arrow = document.createElement('div');
+        arrow.className = 'arrow';
+        arrow.innerText = '↓';
+        flowBox.appendChild(arrow);
+      }
+    });
+
+    // 3. Active UI Update
+    const cards = document.querySelectorAll('.feature-card');
+    cards.forEach(card => card.classList.remove('active'));
+    
+    // Find clicked card (checking icon or using event)
+    if(event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+
+    // 4. Fade In Effect
+    const panel = document.getElementById('details-panel');
+    panel.style.opacity = 0;
+    setTimeout(() => { panel.style.opacity = 1; panel.style.transition = "0.4s"; }, 50);
+  }
+
+  // Set default view on load
+  window.onload = () => updateView('📍');
+</script>
 
 </body>
 </html>
