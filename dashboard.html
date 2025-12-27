@@ -28,6 +28,15 @@
    RESPONSIVE FIX (MOBILE + TAB)
 ================================*/
 
+        /* Header */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:15px 30px;
+  background:#ffffff;
+}
+
 /* Tablet */
 @media (max-width: 992px) {
     header {
@@ -118,13 +127,17 @@
 </head>
 <body>
 
-    <header>
-        <div class="logo" onclick="location.reload()">Smart Park</div>
-        <nav>
-            <a href="#" onclick="location.reload()">Home</a>
-            <a href="features.html">Features</a>
-            <a href="about.html">About Us</a>
-        </nav>
+     <header class="header">
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="Smart Park Logo">
+  </a>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="features.html">Features</a>
+    <a href="about.html">About Us</a>
+  </nav>
+</header>
          <div class="profile-dropdown" style="position: relative;">
             <div class="profile-circle" onclick="toggleMenu()" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #2ecc71; cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                 <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" style="width: 100%; height: 100%; object-fit: cover;">
