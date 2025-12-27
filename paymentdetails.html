@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Parking Booking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; background:#f5f7fa; padding:20px; }
+    .box { max-width:500px; margin:auto; background:white; padding:20px; border-radius:10px; }
+    input, button { width:100%; padding:12px; margin:10px 0; }
+    button { background:#2ecc71; color:white; border:none; font-size:16px; }
+    .pay-btn { background:#3498db; }
+    .hidden { display:none; }
+    .success { text-align:center; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+
+  <!-- BOOKING SECTION -->
+  <div id="bookingSection">
+    <h2>Complete Your Booking</h2>
+
+    <p><b>Parking:</b> City Center Parking</p>
+    <p><b>Rate:</b> ₹<span id="rate">50</span>/hr</p>
+
+    <input type="number" id="hours" placeholder="Booking Duration (hours)" min="1">
+    <p><b>Total Amount:</b> ₹<span id="total">0</span></p>
+
+    <button class="pay-btn" onclick="goToPayment()">Next → Payment</button>
+  </div>
+
+  <!-- PAYMENT SECTION -->
+  <div id="paymentSection" class="hidden">
+    <h2>Select Payment Method</h2>
+    <p>Total Payable: ₹<span id="payAmount"></span></p>
+
+    <button onclick="pay('card')">💳 Card</button>
+    <button onclick="pay('upi')">📱 UPI</button>
+    <button onclick="pay('qr')">📷 Scan QR</button>
+
+    <div id="payBox"></div>
+  </div>
+
+  <!-- SUCCESS SECTION (ATTACHED CODE) -->
+  <div id="successSection" class="hidden success">
+    <h2>🎉 Booking Confirmed</h2>
+    <p>Your parking slot is reserved.</p>
+  </div>
+
+</div>
+
+<script>
+let rate = 20;
+let totalAmount = 0;
+
+// Calculate amount
+document.getElementById("hours").addEventListener("input", function () {
+  totalAmount = this.value * rate || 0;
+  document.getElementById("total").innerText = totalAmount;
+});
+
+// Go to payment section
+function goToPayment() {
+  const hours = document.getElementById("hours").value;
+
+  if (!hours || hours <= 0) {
+    alert("Please enter valid hours");
+    return;
+  }
+
+  document.getElementById("bookingSection").classList.add("hidden");
+  document.getElementById("paymentSection").classList.remove("hidden");
+  document.getElementById("payAmount").innerText = totalAmount;
+}
+
+// Payment options
+function pay(type) {
+  const box = document.getElementById("payBox");
+
+  if (type === "card") {
+    box.innerHTML = `
+      <input placeholder="Card Number" maxlength="16">
+      <input placeholder="MM/YY" maxlength="5">
+      <input placeholder="CVV" maxlength="3">
+      <button onclick="success()">Pay ₹${totalAmount}</button>
+    `;
+  }
+
+  if (type === "upi") {
+    box.innerHTML = `
+      <input placeholder="Enter UPI ID">
+      <button onclick="success()">Pay ₹${totalAmount}</button>
+    `;
+  }
+
+  if (type === "qr") {
+    box.innerHTML = `
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=SmartParking|Amount:${totalAmount}">
+      <button onclick="success()">Payment Done</button>
+    `;
+  }
+}
+
+// Payment success
+function success() {
+  document.getElementById("paymentSection").classList.add("hidden");
+  document.getElementById("successSection").classList.remove("hidden");
+}
+</script>
+</body>
+</html>
