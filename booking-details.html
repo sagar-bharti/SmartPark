@@ -65,35 +65,33 @@
     }
     getSpotInfo();
 
-    // 3. Final Booking Submit karna
-    document.getElementById('finalBookingForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerText = "Processing...";
+  // --- 3. Final Booking Submit Logic ---
+document.getElementById('finalBookingForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Yahan ID check karlein: Agar button ki ID 'nextbtn' hai toh wahi likhein
+    const btn = document.getElementById('nextbtn') || document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerText = "Redirecting to Payment...";
 
-        try {
-            // A. Spot count kam karna
-            const spotRef = doc(db, "parking_spots", spotId);
-            await updateDoc(spotRef, { available: increment(-1) });
+    // A. Form se values nikalna
+    const uName = document.getElementById('userName').value;
+    const vNum = document.getElementById('vehicleNum').value;
 
-            // B. Booking record save karna (History ke liye)
-            await addDoc(collection(db, "bookings"), {
-                spotId: spotId,
-                userName: document.getElementById('userName').value,
-                vehicle: document.getElementById('vehicleNum').value,
-                duration: document.getElementById('hours').value,
-                timestamp: new Date()
-            });
+    try {
+        // B. Redirect logic: Payment page par bhejna aur data saath le jaana
+        // Hum abhi database me save nahi kar rahe, payment ke baad karenge
+        const paymentURL = `paymentdetails.html?spotId=${spotId}&uName=${encodeURIComponent(uName)}&vNum=${encodeURIComponent(vNum)}`;
+        
+        console.log("Moving to:", paymentURL); // Debugging ke liye
+        window.location.href = paymentURL;
 
-            alert("🎉 Booking Successful! Your spot is reserved.");
-            window.location.href = "dashboard.html"; // Wapas bhej dena
-
-        } catch (error) {
-            alert("Error: " + error.message);
-            btn.disabled = false;
-        }
-    });
+    } catch (error) {
+        alert("Error: " + error.message);
+        btn.disabled = false;
+        btn.innerText = "Click to Next";
+    }
+});
 </script>
 </body>
 </html>
