@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>About | Smart Park</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body{
+  background:#f4f6fb;
+}
+
+header{
+  background: #0b5ed7;
+  padding: 15px 30px;
+  color: white;
+}
+
+header a{
+  color: white;
+  text-decoration: none;
+  margin-right: 15px;
+  font-weight: bold;
+}
+
+
+
+/* ABOUT SECTION */
+.about{
+  max-width:1100px;
+  margin:80px auto;
+  background:#fff;
+  padding:60px;
+  border-radius:16px;
+  display:flex;
+  gap:50px;
+  align-items:center;
+  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* LEFT IMAGE */
+.about-img{
+  flex:1;
+  position:relative;
+}
+
+.about-img img{
+  width:100%;
+  border-radius:20px;
+}
+
+/* RIGHT CONTENT */
+.about-content{
+  flex:1;
+}
+
+.about-content span{
+  color:#0d6efd;
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.about-content h2{
+  font-size:36px;
+  margin:15px 0;
+  color:#222;
+}
+
+.about-content p{
+  color:#555;
+  line-height:1.7;
+  margin-bottom:20px;
+}
+
+
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .about{
+    flex-direction:column;
+    padding:40px 25px;
+  }
+}
+</style>
+</head>
+
+<body>
+    <header>
+  <a href="dashboard.html">Home</a>
+  <a href="Features.html">Features</a>
+  <a href="ContactUs.html">Contact Us</a>
+</header>
+
+
+<section class="about">
+  <!-- LEFT IMAGE -->
+  <div class="about-img">
+    <img src="aboutparking.jpg" alt="Smart Parking">
+  </div>
+
+  <!-- RIGHT CONTENT -->
+  <div class="about-content">
+    <span><h3>ABOUT SMART PARK</h3></span>
+    <h2>Transforming Parking Into a Smart Digital Experience</h2>
+
+    <p>
+      Smart Park is an AI-powered intelligent parking management platform
+      designed to solve urban parking challenges. We help users find,
+      book, and navigate to parking spaces in real time while enabling
+      landowners to monetize unused spaces.
+    </p>
+
+    <p>
+      By integrating Google Maps, real-time availability, and secure
+      digital payments, Smart Park reduces traffic congestion, saves fuel,
+      and supports smarter cities.
+    </p>
+
+    
+</section>
+
+</body>
+</html>
