@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Park – Live Booking & Partner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Pehle wala CSS base rahega */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background: #f5f7fa; }
+        header { background: #ffffff; padding: 15px 60px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 26px; font-weight: bold; color: #2ecc71; cursor: pointer; }
+        nav a { margin: 0 15px; text-decoration: none; color: #444; font-weight: 500; }
+        
+        /* New Owner Button Style */
+        .owner-btn { background: #34495e; color: white; padding: 10px 18px; border-radius: 5px; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .owner-btn:hover { background: #2c3e50; }
+
+        #home-1 { height: calc(100vh - 80px); background: linear-gradient(rgba(0,140,200,0.8), rgba(0,140,200,0.8)), url("https://images.unsplash.com/photo-1506521781263-d8422e82f27a") center/cover; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #fff; }
+        .booking-form { background: #ffffff; padding: 20px; border-radius: 8px; display: flex; gap: 15px; width: 80%; max-width: 900px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .booking-form input, .booking-form select { flex: 1; padding: 14px; border: 1px solid #ddd; border-radius: 5px; }
+        .booking-form button { background: #2ecc71; color: white; border: none; padding: 14px 25px; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        
+        #home-2 { display: none; padding: 50px 60px; background: #f5f7fa; min-height: 100vh; }
+        .parking-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .parking-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid #2ecc71; transition: 0.3s; }
+        .parking-card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-info { padding: 20px; }
+        .price-tag { font-size: 22px; font-weight: bold; color: #2c3e50; margin: 10px 0; }
+        .confirm-btn { display: block; width: 100%; text-align: center; background: #3498db; color: white; padding: 12px; text-decoration: none; border-radius: 5px; margin-top: 15px; cursor: pointer; border:none; }
+
+        /* Owner Modal Styles */
+        #owner-modal { display:none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center; }
+        .modal-content { background:white; padding:30px; border-radius:12px; width:90%; max-width:500px; position:relative; }
+        .modal-content h2 { margin-bottom:15px; color:#2c3e50; }
+        .modal-content input, .modal-content select { width:100%; padding:12px; margin-bottom:12px; border:1px solid #ddd; border-radius:5px; }
+        .close-modal { position:absolute; top:15px; right:20px; font-size:24px; cursor:pointer; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header { flex-direction: column; padding: 15px; height: auto; }
+            nav { margin: 15px 0; }
+            .booking-form { flex-direction: column; width: 95%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="location.reload()">Smart Park</div>
+        <nav>
+            <a href="#" onclick="location.reload()">Home</a>
+            <a href="#" onclick="document.getElementById('owner-modal').style.display='flex'">Register Parking</a>
+        </nav>
+        <a href="#" class="owner-btn" onclick="document.getElementById('owner-modal').style.display='flex'">Rent Your Space</a>
+    </header>
+
+    <div id="main-content">
+        <section id="home-1">
+            <h1>Best Deals For Parking!</h1>
+            <p>Book your spot in seconds or rent your space and earn.</p>
+            <form class="booking-form" id="bookingForm">
+                <select id="loc" required>
+                    <option value="">Select Location</option>
+                    <option value="Nearby">Nearby (GPS)</option>
+                </select>
+                <input type="text" placeholder="Your Name" required>
+                <button type="submit">Search Nearby Parking</button>
+            </form>
+        </section>
+    </div>
+
+    <div id="owner-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="document.getElementById('owner-modal').style.display='none'">&times;</span>
+            <h2>List Your Parking</h2>
+            <form id="ownerForm">
+                <input type="text" id="spotName" placeholder="Parking Name (e.g. Aman's Garage)" required>
+                <input type="number" id="spotPrice" placeholder="Price per Hour (₹)" required>
+                <input type="number" id="spotSlots" placeholder="Total Available Slots" required>
+                <select id="spotType" required>
+                    <option value="">Parking Type</option>
+                    <option value="Open">Open Space</option>
+                    <option value="Covered">Covered/Basement</option>
+                    <option value="CCTV">CCTV Secured</option>
+                </select>
+                <input type="text" id="spotImg" placeholder="Image URL (Unsplash or Link)">
+                <p style="font-size: 12px; color: #666; margin-bottom: 5px;">We will use your current location for the spot.</p>
+                <button type="submit" class="confirm-btn" style="background:#2ecc71">Register My Area</button>
+            </form>
+        </div>
+    </div>
+
+    <section id="home-2">
+        <h2 style="text-align:center;">Available Parking Spaces</h2>
+        <div class="parking-grid" id="parking-grid"></div>
+    </section>
+
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCRK6QnA0F_MNkSdNiVnNgypt2TzlaVomQ",
+        authDomain: "smart-parking-3d52f.firebaseapp.com",
+        projectId: "smart-parking-3d52f",
+        storageBucket: "smart-parking-3d52f.firebasestorage.app",
+        messagingSenderId: "139926831182",
+        appId: "1:139926831182:web:14ce31ebdaa2b5acac431f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // --- 1. Distances Calculator ---
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))).toFixed(1);
+    }
+
+    // --- 2. Owner Registration Logic ---
+    const ownerForm = document.getElementById('ownerForm');
+    ownerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Owner ki current location lena taki parking map par sahi dikhe
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            const newSpot = {
+                name: document.getElementById('spotName').value,
+                price: document.getElementById('spotPrice').value,
+                available: parseInt(document.getElementById('spotSlots').value),
+                type: document.getElementById('spotType').value,
+                image: document.getElementById('spotImg').value || 'https://images.unsplash.com/photo-1590674899484-13da0d1b58f5?w=500',
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+                createdAt: serverTimestamp()
+            };
+
+            try {
+                await addDoc(collection(db, "parking_spots"), newSpot);
+                alert("Success! Your parking space is now live.");
+                document.getElementById('owner-modal').style.display = 'none';
+                ownerForm.reset();
+            } catch (err) {
+                alert("Error adding spot: " + err.message);
+            }
+        }, () => alert("Location is required to register a spot."));
+    });
+
+    // --- 3. Load Real-time Data ---
+    const grid = document.getElementById('parking-grid');
+    async function loadParkingData() {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+
+            onSnapshot(collection(db, "parking_spots"), (snapshot) => {
+                grid.innerHTML = "";
+                snapshot.forEach((docSnap) => {
+                    const spot = docSnap.data();
+                    const distance = calculateDistance(userLat, userLng, spot.lat, spot.lng);
+
+                    grid.innerHTML += `
+                        <div class="parking-card">
+                            <img src="${spot.image}" alt="parking">
+                            <div class="card-info">
+                                <h3>${spot.name}</h3>
+                                <p style="color:#666; font-size:13px;">Type: ${spot.type} | 📍 ${distance} km</p>
+                                <p style="color:${spot.available > 0 ? '#2ecc71' : '#e74c3c'}; font-weight:bold;">
+                                    Available: ${spot.available} Slots
+                                </p>
+                                <div class="price-tag">₹${spot.price}/hr</div>
+                                <button onclick="window.confirmBooking('${docSnap.id}')" class="confirm-btn" ${spot.available <= 0 ? 'disabled' : ''}>
+                                    ${spot.available > 0 ? 'Book Now' : 'Full'}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        });
+    }
+
+    // --- 4. Event Listeners ---
+    document.getElementById('bookingForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        document.getElementById('main-content').style.display = 'none';
+        document.getElementById('home-2').style.display = 'block';
+        loadParkingData();
+    });
+
+    window.confirmBooking = (id) => {
+        window.location.href = `booking-details.html?spotId=${id}`;
+    };
+</script>
+</body>
+</html>
