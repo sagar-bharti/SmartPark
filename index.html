@@ -325,6 +325,18 @@ window.handleAction = async () => {
         alert("Error: " + error.message);
     }
   };
+
+//authfile
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        // Agar user login nahi hai, toh use login page par bhej do
+        // Isse wo bina login kiye dashboard nahi dekh payega
+        window.location.replace("login.html"); 
+    } else {
+        // User login hai, Gmail dikhao
+        document.getElementById('user-name').innerText = user.email;
+    }
+});
 </script>
 </body>
 </html>
