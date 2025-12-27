@@ -149,7 +149,11 @@
 
   <div class="input-box">
     <input type="password" id="password" required placeholder=" ">
-    <label>Password Any Minimum 6 character</label>
+    <label>Password minimum 6 character</label>
+
+    <p style="text-align: right; font-size: 13px; margin-top: -15px; margin-bottom: 15px;">
+  <span onclick="forgotPassword()" style="color: #2980b9; cursor: pointer;">Forgot Password?</span>
+</p>
   </div>
 
   <div id="role-section" class="role-select">
@@ -179,12 +183,30 @@
 </div>
 
 <script type="module">
-  // 1. Firebase ke functions ko import karein
+ // A. Core App Import
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // 2. Aapka Firebase Config (Wahi jo dashboard mein tha)
+  // B. Auth Import (Isme sendPasswordResetEmail ko dhyan se dekhiye)
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    sendPasswordResetEmail 
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  // C. Firestore Import
+import { 
+  getFirestore, 
+  doc, 
+  setDoc,
+  getDoc  // <--- Bas ye ek shabd yahan jodna hai
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // ... baaki ka config aur code ...
+
+  // ... baaki ka config aur code yahan se shuru hoga ..
+
+  // 2. Aapka Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyCRK6QnA0F_MNkSdNiVnNgypt2TzlaVomQ",
     authDomain: "smart-parking-3d52f.firebaseapp.com",
@@ -201,8 +223,7 @@
 
   let isLoginMode = true;
 
-  // --- ZAROORI: type="module" mein functions ko window object se jodna padta hai ---
-  
+  // --- UI Functions ---
   window.toggleForm = (mode) => {
     const title = document.getElementById("form-title");
     const btn = document.getElementById("main-btn");
@@ -230,52 +251,80 @@
     document.getElementById('owner-card').classList.toggle('active', roleValue === 'owner');
   };
 
-  // --- MAIN BACKEND ACTION ---
-  window.handleAction = async () => {
-    let email = document.getElementById("email").value;
-    let pass = document.getElementById("password").value;
-    let role = document.getElementById("role").value; // Signup ke time role lega
-    let btn = document.getElementById("main-btn");
+  // --- LOGIN / SIGNUP LOGIC ---
+window.handleAction = async () => {
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+    const selectedRole = document.getElementById("role").value; // Signup ke liye
+    const btn = document.getElementById("main-btn");
 
-    if (email === "" || pass === "") {
-      alert("Please fill all fields");
-      return;
-    }
-
-    btn.disabled = true;
-    btn.innerText = "Processing...";
+    if (!email || !pass) { alert("Please fill all fields"); return; }
+    btn.disabled = true; btn.innerText = "Processing...";
 
     try {
-      if (isLoginMode) {
-        // --- LOGIN LOGIC ---
-        await signInWithEmailAndPassword(auth, email, pass);
-        alert("Login Successful!");
-        window.location.href = "dashboard.html";
-      } else {
-        // --- SIGNUP LOGIC ---
-        // A. Account banayein
-        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-        const user = userCredential.user;
+        if (isLoginMode) {
+            // --- LOGIN LOGIC ---
+            const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+            const uid = userCredential.user.uid;
 
-        // B. Database mein "users" folder bana kar role save karein
-        await setDoc(doc(db, "users", user.uid), {
-          email: email,
-          role: role,
-          uid: user.uid,
-          createdAt: new Date()
-        });
+            // Firestore se Role check karna ki ye Owner hai ya User
+            const userDoc = await getDoc(doc(db, "users", uid));
+            
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                if (userData.role === 'owner') {
+                    window.location.href = "ownerdashboard.html"; // Owner ke liye
+                } else {
+                    window.location.href = "dashboard.html"; // Normal user ke liye
+                }
+            } else {
+                alert("User data not found in database!");
+            }
 
-        alert("Registered successfully as " + role.toUpperCase());
-        window.location.href = "dashboard.html";
-      }
+        } else {
+            // --- SIGNUP LOGIC ---
+            const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+            const uid = userCredential.user.uid;
+
+            // Firestore mein Role save karna
+            await setDoc(doc(db, "users", uid), {
+                email: email,
+                role: selectedRole,
+                uid: uid,
+                createdAt: new Date()
+            });
+
+            alert("Account created as " + selectedRole.toUpperCase());
+            
+            // Sahi page par redirect karna
+            if (selectedRole === 'owner') {
+                window.location.href = "ownerdashboard.html";
+            } else {
+                window.location.href = "dashboard.html";
+            }
+        }
+    } catch (error) { 
+        alert("Error: " + error.message); 
+    } finally { 
+        btn.disabled = false; 
+        btn.innerText = isLoginMode ? "LOGIN" : "SIGN UP"; 
+    }
+};
+
+  // --- FORGOT PASSWORD LOGIC (Sabse End Mein) ---
+  window.forgotPassword = async () => {
+    const email = document.getElementById("email").value;
+    if (!email) {
+        alert("Pehle apna Email ID likhein!");
+        return;
+    }
+    try {
+        await sendPasswordResetEmail(auth, email);
+        alert("Verification link aapke Gmail par bhej diya gaya hai! Check your inbox.");
     } catch (error) {
-      alert("Error: " + error.message);
-    } finally {
-      btn.disabled = false;
-      btn.innerText = isLoginMode ? "LOGIN" : "SIGN UP";
+        alert("Error: " + error.message);
     }
   };
 </script>
-
 </body>
 </html>
