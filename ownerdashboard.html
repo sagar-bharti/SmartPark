@@ -95,10 +95,10 @@
         <h2 style="text-align:center;">Available Parking Spaces</h2>
         <div class="parking-grid" id="parking-grid"></div>
     </section>
-
-    <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"; // <-- YE ZAROORI HAI
 
     const firebaseConfig = {
         apiKey: "AIzaSyCRK6QnA0F_MNkSdNiVnNgypt2TzlaVomQ",
@@ -111,6 +111,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app); // <-- YE LINE ADD KAREIN (Auth initialize karne ke liye)
 
     // --- 1. Distances Calculator ---
     function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -122,14 +123,22 @@
         return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))).toFixed(1);
     }
 
-    // --- 2. Owner Registration Logic ---
+    // --- 2. Owner Registration Logic (Sahi tarika) ---
     const ownerForm = document.getElementById('ownerForm');
     ownerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Owner ki current location lena taki parking map par sahi dikhe
+        // LOGIN CHECK: Pehle check karein user logged in hai?
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+            alert("Error: Please login first!");
+            return;
+        }
+
         navigator.geolocation.getCurrentPosition(async (pos) => {
+            // YAHAN DATA SAVE KARNA HAI (Form submit hone par)
             const newSpot = {
+                ownerId: currentUser.uid, // Login user ki ID
                 name: document.getElementById('spotName').value,
                 price: document.getElementById('spotPrice').value,
                 available: parseInt(document.getElementById('spotSlots').value),
