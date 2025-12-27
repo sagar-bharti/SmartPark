@@ -28,30 +28,6 @@
    RESPONSIVE FIX (MOBILE + TAB)
 ================================*/
 
-        /* Header */
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:15px 30px;
-  background:#ffffff;
-}
-        .logo img{
-  height:20px;      /* size adjust */
-  cursor:pointer;
-}
-
-nav a{
-  margin-left:20px;
-  text-decoration:none;
-  color:#333;
-  font-weight:600;
-}
-
-nav a:hover{
-  color:#0b5ed7;
-}
-
 
 /* Tablet */
 @media (max-width: 992px) {
@@ -204,17 +180,15 @@ nav a:hover{
 </head>
 <body>
 
-     <header class="header">
-  <a href="index.html" class="logo">
-    <img src="logo.png" alt="Smart Park Logo">
-  </a>
-
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="features.html">Features</a>
-    <a href="about.html">About Us</a>
-  </nav>
-</header>
+    <header>
+        <div class="logo" onclick="location.reload()">Smart Park</div>
+        <nav>
+            <a href="#" onclick="location.reload()">Home</a>
+            <a href="features.html">Features</a>
+            <a href="about.html">About Us</a>
+        </nav>
+        <div class="phone">📞 +91 808 505 5261</div>
+    </header>
          
             <div class="profile-circle" onclick="toggleMenu()" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #2ecc71; cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                 <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" style="width: 100%; height: 100%; object-fit: cover;">
