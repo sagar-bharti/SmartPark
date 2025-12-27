@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contact Us | Smart Park</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body{
+  background:#f4f6fb;
+}
+
+/* header */
+
+header{
+  background: #0b5ed7;
+  padding: 15px 30px;
+  color: white;
+}
+
+header a{
+  color: white;
+  text-decoration: none;
+  margin-right: 15px;
+  font-weight: bold;
+}
+
+/* HERO SECTION */
+.contact-hero{
+  height:350px;
+  background:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url("https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b");
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:white;
+}
+
+.contact-hero h1{
+  font-size:48px;
+  letter-spacing:2px;
+  color:#ff7a18;
+}
+
+.contact-hero p{
+  max-width:600px;
+  margin:15px auto 0;
+  color:#ddd;
+}
+
+/* CONTACT INFO */
+.contact-section{
+  max-width:1100px;
+  margin:-80px auto 60px;
+  background:white;
+  padding:50px;
+  border-radius:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.1);
+}
+
+.contact-cards{
+  display:flex;
+  gap:30px;
+  justify-content:space-between;
+  text-align:center;
+}
+.contact-link {
+  cursor: pointer;        /*  finger cursor */
+  color: inherit;
+  text-decoration: none;
+}
+
+.contact-link:hover {
+  color: #ff6b6b;
+  text-decoration: underline;
+}
+
+.card{
+  flex:1;
+  padding:30px 20px;
+  border-radius:14px;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 15px 30px rgba(0,0,0,0.12);
+}
+
+.card i{
+  font-size:40px;
+  color:#ff7a18;
+  margin-bottom:15px;
+}
+
+.card h3{
+  margin-bottom:10px;
+  color:#333;
+}
+
+.card p{
+  color:#666;
+  font-size:14px;
+  line-height:1.6;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .contact-cards{
+    flex-direction:column;
+  }
+
+  .contact-hero h1{
+    font-size:36px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+
+    <header>
+  <a href="dashboard.html">Home</a>
+  <a href="Features.html">Features</a>
+  <a href="Contactus.html">Contact Us</a>
+</header>
+
+<!-- HERO -->
+<section class="contact-hero">
+  <div>
+    <h1>CONTACT US</h1>
+    <p>
+      Need help or have questions? You are more than welcome to leave
+      your contact details and we will be in touch shortly.
+    </p>
+  </div>
+</section>
+
+<!-- CONTACT INFO -->
+<section class="contact-section">
+  <div class="contact-cards">
+
+    <!-- Visit Us -->
+    <div class="card">
+      <i>🏠</i>
+      <h3>Visit Us</h3>
+      <p>
+        Smart Park <br>
+        Bhilai City, Chhattisgarh
+      </p>
+    </div>
+
+    <!-- Call Us -->
+    <div class="card">
+      <i>📞</i>
+      <h3>Call Us</h3>
+      <p>
+        <a href="tel:+918885052561" class="contact-link">
+          +91 888 505 5261
+        </a><br>
+        <a href="tel:+919773338047" class="contact-link">
+          +91 977 333 8047
+        </a>
+      </p>
+    </div>
+
+    <!-- Email Us -->
+    <div class="card">
+      <i>✉️</i>
+      <h3>Email Us</h3>
+      <p>
+        <a href="mailto:support@smartpark.com" class="contact-link">
+          support@smartpark.com
+        </a><br>
+        <a href="mailto:help@smartpark.com" class="contact-link">
+          help@smartpark.com
+        </a>
+      </p>
+    </div>
+
+  </div>
+</section>
+  </div>
+</section>
+
+</body>
+</html>
