@@ -54,8 +54,10 @@
         </nav>
         <a href="#" class="owner-btn" onclick="document.getElementById('owner-modal').style.display='flex'">Rent Your Space</a>
 
+
+
         <div class="profile-dropdown" style="position: relative;">
-            <div class="profile-circle" onclick="toggleMenu()" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #2ecc71; cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            <div class="profile-circle" onclick="toggleMenu(event)" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #2ecc71; cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                 <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
 
@@ -71,6 +73,7 @@
                 </div>
                 <a href="#" onclick="logout()" style="padding: 10px; text-decoration: none; color: red;">🚪 Logout</a>
             </div>
+        
     </header>
 
     <div id="main-content">
@@ -114,6 +117,51 @@
         <div class="parking-grid" id="parking-grid"></div>
     </section>
 <script type="module">
+
+
+/* ---------- PROFILE DROPDOWN + LOGOUT FIX ---------- */
+
+// Dropdown open/close
+window.toggleMenu = (event) => {
+    event.stopPropagation(); // 🔑 very important
+    const menu = document.getElementById("menu");
+    if (menu) {
+        menu.style.display =
+            (menu.style.display === "none" || menu.style.display === "")
+                ? "flex"
+                : "none";
+    }
+};
+
+// Bahar click karne par close
+window.onclick = (event) => {
+    if (!event.target.closest(".profile-dropdown")) {
+        const menu = document.getElementById("menu");
+        if (menu) menu.style.display = "none";
+    }
+};
+
+// Logout function
+import { signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+window.logout = () => {
+    signOut(auth)
+        .then(() => {
+            alert("Logged out successfully!");
+            window.location.replace("index.html");
+        })
+        .catch((error) => {
+            alert(error.message);
+        });
+};
+import { onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import { doc, getDoc } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"; // <-- YE ZAROORI HAI
@@ -130,6 +178,50 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app); // <-- YE LINE ADD KAREIN (Auth initialize karne ke liye)
+// -------- OWNER DASHBOARD : PROFILE NAME / EMAIL LOAD --------
+onAuthStateChanged(auth, async (user) => {
+
+    const nameTag = document.getElementById("user-name");
+    const roleTag = document.getElementById("user-role");
+    const ownerNav = document.getElementById("owner-links-nav");
+
+    if (!nameTag) return;
+
+    if (user) {
+        // Default pehle email dikhaye
+        nameTag.innerText = user.email;
+
+        try {
+            // Firestore se user ka data uthao
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (userSnap.exists()) {
+                const userData = userSnap.data();
+
+                // Agar name save hai toh email ki jagah name
+                if (userData.name && userData.name.trim() !== "") {
+                    nameTag.innerText = userData.name;
+                }
+
+                // Role show
+                const role = userData.role || "User";
+                if (roleTag) roleTag.innerText = role.toUpperCase();
+
+                // Owner ke liye extra link
+                if (role === "owner" && ownerNav) {
+                    ownerNav.style.display = "block";
+                }
+            }
+        } catch (error) {
+            console.error("User fetch error:", error);
+        }
+
+    } else {
+        // Agar login nahi hai
+        nameTag.innerText = "Guest";
+    }
+});
 
     // --- 1. Distances Calculator ---
     function calculateDistance(lat1, lon1, lat2, lon2) {
