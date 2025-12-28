@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Smart Parking Booking</title>
+  <title>Smart Parking – Payment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { font-family: Arial; background:#f5f7fa; padding:20px; }
     .box { max-width:500px; margin:auto; background:white; padding:20px; border-radius:10px; }
     input, button { width:100%; padding:12px; margin:10px 0; }
-    button { background:#2ecc71; color:white; border:none; font-size:16px; }
+    button { background:#2ecc71; color:white; border:none; font-size:16px; cursor:pointer; }
     .pay-btn { background:#3498db; }
     .hidden { display:none; }
     .success { text-align:center; }
@@ -42,39 +42,37 @@
     <div id="payBox"></div>
   </div>
 
-  <!-- SUCCESS SECTION (ATTACHED CODE) -->
-
-
+  <!-- SUCCESS SECTION -->
   <div id="successSection" class="hidden success">
-  <h2>🎉 Booking Confirmed</h2>
-  <p>Your parking slot is reserved.</p>
+    <h2>🎉 Booking Confirmed</h2>
+    <p>Your parking slot is reserved.</p>
 
-  <div id="bookingInfo" style="margin-top:15px;"></div>
+    <div id="bookingInfo" style="margin-top:15px;"></div>
 
-  <div id="ticketBox" style="
-    margin-top:20px;
-    padding:15px;
-    border:2px dashed #2ecc71;
-    border-radius:8px;
-  ">
-    <h3>🎫 Parking Ticket</h3>
-    <p><b>Slot Number:</b> <span id="slotNum"></span></p>
+    <div style="
+      margin-top:20px;
+      padding:15px;
+      border:2px dashed #2ecc71;
+      border-radius:8px;
+    ">
+      <h3>🎫 Parking Ticket</h3>
+      <p><b>Slot Number:</b> <span id="slotNum"></span></p>
+    </div>
   </div>
+
 </div>
 
-
-
 <script>
+/* ---------------- BASIC CALCULATION ---------------- */
 let rate = 10;
 let totalAmount = 0;
 
-// Calculate amount
 document.getElementById("hours").addEventListener("input", function () {
   totalAmount = this.value * rate || 0;
   document.getElementById("total").innerText = totalAmount;
 });
 
-// Go to payment section
+/* ---------------- STEP 1: GO TO PAYMENT ---------------- */
 function goToPayment() {
   const hours = document.getElementById("hours").value;
 
@@ -88,7 +86,7 @@ function goToPayment() {
   document.getElementById("payAmount").innerText = totalAmount;
 }
 
-// Payment options
+/* ---------------- STEP 2: PAYMENT OPTIONS ---------------- */
 function pay(type) {
   const box = document.getElementById("payBox");
 
@@ -97,28 +95,45 @@ function pay(type) {
       <input placeholder="Card Number" maxlength="16">
       <input placeholder="MM/YY" maxlength="5">
       <input placeholder="CVV" maxlength="3">
-      <button onclick="success()">Pay ₹${totalAmount}</button>
+      <button type="button" onclick="success()">Pay ₹${totalAmount}</button>
     `;
   }
 
   if (type === "upi") {
     box.innerHTML = `
       <input placeholder="Enter UPI ID">
-      <button onclick="success()">Pay ₹${totalAmount}</button>
+      <button type="button" onclick="success()">Pay ₹${totalAmount}</button>
     `;
   }
 
   if (type === "qr") {
     box.innerHTML = `
       <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=SmartParking|Amount:${totalAmount}">
-      <button onclick="success()">Payment Done</button>
+      <button type="button" onclick="success()">Payment Done</button>
     `;
   }
 }
 
-// Payment success
+/* ---------------- STEP 3: PAYMENT SUCCESS ---------------- */
+function success() {
+  document.getElementById("paymentSection").classList.add("hidden");
+  document.getElementById("successSection").classList.remove("hidden");
 
+  // URL se booking details uthana
+  const params = new URLSearchParams(window.location.search);
+  const userName = params.get("uName") || "N/A";
+  const vehicleNum = params.get("vNum") || "N/A";
 
+  document.getElementById("bookingInfo").innerHTML = `
+    <p><b>Name:</b> ${userName}</p>
+    <p><b>Vehicle Number:</b> ${vehicleNum}</p>
+  `;
+
+  // Random slot number (101–500)
+  const slot = Math.floor(Math.random() * (500 - 101 + 1)) + 101;
+  document.getElementById("slotNum").innerText = slot;
+}
 </script>
+
 </body>
 </html>
