@@ -3,25 +3,80 @@
 <head>
   <title>Smart Parking – Payment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
-    body { font-family: Arial; background:#f5f7fa; padding:20px; }
-    .box { max-width:500px; margin:auto; background:white; padding:20px; border-radius:10px; }
-    input, button { width:100%; padding:12px; margin:10px 0; }
-    button { background:#2ecc71; color:white; border:none; font-size:16px; cursor:pointer; }
+    body {
+      min-height:100vh;
+      margin:0;
+      padding:40px 15px;
+      background: linear-gradient(135deg,#89f7fe,#66a6ff);
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      font-family: Arial;
+    }
+
+    .box{
+      width:100%;
+      max-width:520px;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(14px);
+      padding:30px;
+      border-radius:20px;
+      box-shadow:0 25px 60px rgba(0,0,0,0.25);
+    }
+
+    input, button, textarea {
+      width:100%;
+      padding:12px;
+      margin:10px 0;
+      border-radius:8px;
+      border:1px solid #ddd;
+    }
+
+    button {
+      background:#2ecc71;
+      color:white;
+      border:none;
+      font-size:16px;
+      cursor:pointer;
+    }
+
     .pay-btn { background:#3498db; }
     .hidden { display:none; }
     .success { text-align:center; }
+
+    /* ⭐ Rating */
+    .stars {
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      font-size:30px;
+      cursor:pointer;
+    }
+
+    .star { color:#ccc; transition:0.3s; }
+    .star.active { color:#f1c40f; transform:scale(1.2); }
+
+    textarea { resize:none; height:90px; }
+
+    .ticket {
+      margin-top:20px;
+      padding:15px;
+      border:2px dashed #2ecc71;
+      border-radius:8px;
+    }
   </style>
 </head>
+
 <body>
 
 <div class="box">
 
-  <!-- BOOKING SECTION -->
+  <!-- BOOKING -->
   <div id="bookingSection">
     <h2>Complete Your Booking</h2>
-
-    <p><b>Parking:</b> City Center Parking</p>
+    <h3>City Center Parking</h3>
     <p><b>Rate:</b> ₹<span id="rate">10</span>/hr</p>
 
     <input type="number" id="hours" placeholder="Booking Duration (hours)" min="1">
@@ -30,7 +85,7 @@
     <button class="pay-btn" onclick="goToPayment()">Next → Payment</button>
   </div>
 
-  <!-- PAYMENT SECTION -->
+  <!-- PAYMENT -->
   <div id="paymentSection" class="hidden">
     <h2>Select Payment Method</h2>
     <p>Total Payable: ₹<span id="payAmount"></span></p>
@@ -42,28 +97,35 @@
     <div id="payBox"></div>
   </div>
 
-  <!-- SUCCESS SECTION -->
+  <!-- SUCCESS -->
   <div id="successSection" class="hidden success">
     <h2>🎉 Booking Confirmed</h2>
     <p>Your parking slot is reserved.</p>
 
-    <div id="bookingInfo" style="margin-top:15px;"></div>
+    <div id="bookingInfo"></div>
 
-    <div style="
-      margin-top:20px;
-      padding:15px;
-      border:2px dashed #2ecc71;
-      border-radius:8px;
-    ">
+    <div class="ticket">
       <h3>🎫 Parking Ticket</h3>
       <p><b>Slot Number:</b> <span id="slotNum"></span></p>
     </div>
+
+    <h3>Rate Your Experience</h3>
+    <div class="stars">
+      <span class="star" onclick="rateStar(1)">★</span>
+      <span class="star" onclick="rateStar(2)">★</span>
+      <span class="star" onclick="rateStar(3)">★</span>
+      <span class="star" onclick="rateStar(4)">★</span>
+      <span class="star" onclick="rateStar(5)">★</span>
+    </div>
+
+    <textarea placeholder="Write your feedback here..."></textarea>
+    <button onclick="submitFeedback()">Submit Feedback</button>
   </div>
 
 </div>
 
 <script>
-/* ---------------- BASIC CALCULATION ---------------- */
+/* BASIC CALCULATION */
 let rate = 10;
 let totalAmount = 0;
 
@@ -72,56 +134,33 @@ document.getElementById("hours").addEventListener("input", function () {
   document.getElementById("total").innerText = totalAmount;
 });
 
-/* ---------------- STEP 1: GO TO PAYMENT ---------------- */
+/* GO TO PAYMENT */
 function goToPayment() {
   const hours = document.getElementById("hours").value;
-
   if (!hours || hours <= 0) {
     alert("Please enter valid hours");
     return;
   }
-
   document.getElementById("bookingSection").classList.add("hidden");
   document.getElementById("paymentSection").classList.remove("hidden");
   document.getElementById("payAmount").innerText = totalAmount;
 }
 
-/* ---------------- STEP 2: PAYMENT OPTIONS ---------------- */
+/* PAYMENT OPTIONS */
 function pay(type) {
   const box = document.getElementById("payBox");
-
-  if (type === "card") {
-    box.innerHTML = `
-      <input placeholder="Card Number" maxlength="16">
-      <input placeholder="MM/YY" maxlength="5">
-      <input placeholder="CVV" maxlength="3">
-      <button type="button" onclick="success()">Pay ₹${totalAmount}</button>
-    `;
-  }
-
-  if (type === "upi") {
-    box.innerHTML = `
-      <input placeholder="Enter UPI ID">
-      <button type="button" onclick="success()">Pay ₹${totalAmount}</button>
-    `;
-  }
-
-  if (type === "qr") {
-    box.innerHTML = `
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=SmartParking|Amount:${totalAmount}">
-      <button type="button" onclick="success()">Payment Done</button>
-    `;
-  }
+  box.innerHTML = `
+    <button type="button" onclick="success()">Pay ₹${totalAmount}</button>
+  `;
 }
 
-/* ---------------- STEP 3: PAYMENT SUCCESS ---------------- */
+/* SUCCESS */
 function success() {
   document.getElementById("paymentSection").classList.add("hidden");
   document.getElementById("successSection").classList.remove("hidden");
 
-  // URL se booking details uthana
   const params = new URLSearchParams(window.location.search);
-  const userName = params.get("uName") || "N/A";
+  const userName = params.get("uName") || "Guest";
   const vehicleNum = params.get("vNum") || "N/A";
 
   document.getElementById("bookingInfo").innerHTML = `
@@ -129,9 +168,26 @@ function success() {
     <p><b>Vehicle Number:</b> ${vehicleNum}</p>
   `;
 
-  // Random slot number (101–500)
   const slot = Math.floor(Math.random() * (500 - 101 + 1)) + 101;
   document.getElementById("slotNum").innerText = slot;
+}
+
+/* RATING */
+let selectedRating = 0;
+
+function rateStar(rating) {
+  selectedRating = rating;
+  document.querySelectorAll(".star").forEach((s,i)=>{
+    s.classList.toggle("active", i < rating);
+  });
+}
+
+function submitFeedback() {
+  if (selectedRating === 0) {
+    alert("Please give a rating ⭐");
+    return;
+  }
+  alert("Thank you for your feedback ❤️");
 }
 </script>
 
