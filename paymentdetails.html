@@ -43,12 +43,26 @@
   </div>
 
   <!-- SUCCESS SECTION (ATTACHED CODE) -->
-  <div id="successSection" class="hidden success">
-    <h2>🎉 Booking Confirmed</h2>
-    <p>Your parking slot is reserved.</p>
-  </div>
 
+
+  <div id="successSection" class="hidden success">
+  <h2>🎉 Booking Confirmed</h2>
+  <p>Your parking slot is reserved.</p>
+
+  <div id="bookingInfo" style="margin-top:15px;"></div>
+
+  <div id="ticketBox" style="
+    margin-top:20px;
+    padding:15px;
+    border:2px dashed #2ecc71;
+    border-radius:8px;
+  ">
+    <h3>🎫 Parking Ticket</h3>
+    <p><b>Slot Number:</b> <span id="slotNum"></span></p>
+  </div>
 </div>
+
+
 
 <script>
 let rate = 10;
@@ -103,10 +117,8 @@ function pay(type) {
 }
 
 // Payment success
-function success() {
-  document.getElementById("paymentSection").classList.add("hidden");
-  document.getElementById("successSection").classList.remove("hidden");
-}
+
+
 </script>
 </body>
 </html>
